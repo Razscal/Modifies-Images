@@ -1,0 +1,7 @@
+fastapi
+pydantic
+urllib3
+python-multipart
+sqlalchemy
+crypto
+pillow
