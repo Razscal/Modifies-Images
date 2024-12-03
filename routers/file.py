@@ -14,16 +14,17 @@ router = APIRouter(
 
 @router.post("/upload")
 async def upload_file(background_task: BackgroundTasks, upload_file : UploadFile = File(...)):
-	try:
-		path = f"files/{uuid.uuid4()}_0.png"
-	except:
+	path = f"files/{uuid.uuid4()}_0.png"
+	processed = f"processed_image/{uuid.uuid4()}_final.png"
+
+	if not os.path.isdir("files"):
 		os.mkdir("files")
-	try:
-		processed = f"processed_image/{uuid.uuid4()}_final.png"
-	except:
+	if not os.path.isdir("processed_image"):
 		os.mkdir("processed_image")
+
 	with open(path, "w+b") as buffer:
 		shutil.copyfileobj(upload_file.file, buffer)
+
 	background_task.add_task(main_process, path, processed)
 	return {
 		"status": "success",
