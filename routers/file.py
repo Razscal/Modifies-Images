@@ -1,6 +1,5 @@
 import os
 import uuid
-
 from fastapi import APIRouter, FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
 from utils.image_process import main_process
@@ -28,5 +27,13 @@ async def upload_file(background_task: BackgroundTasks, upload_file : UploadFile
 	background_task.add_task(main_process, path, processed)
 	return {
 		"status": "success",
-		"message": "Image uploaded"
+		"message": "Image uploaded and is being processed"
 	}
+
+@router.get("/download")
+async def download_file(id):
+	return FileResponse(f"processed_image/{id}_final.png")
+
+@router.get("/download_step")
+async def download_step(id,step):
+	return FileResponse(f"files/{id}_{step}.png")
