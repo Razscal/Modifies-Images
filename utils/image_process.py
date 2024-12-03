@@ -1,13 +1,15 @@
 from PIL import Image
 import uuid
 
-async def main_process(input_path, output_path):
+async def main_process(img_id, origin_path, step):
 	# Full pipe-line
-	output_resize = f"files/{uuid.uuid4()}_1.png"
-	await resize_image(input_path, output_resize)
-	print("Done resize image")
+	step+=1
+	output_resize = f"files/{img_id}_{step}.png"
+	print(output_resize)
+	await resize_image(origin_path, output_resize)
+	print(f"Processing {origin_path} with ID {img_id} at step {step}")
 
-async def resize_image(input_file_path: str, output_file_path: str, width: int = 200, height: int = 200):
-	with Image.open(input_file_path) as img:
+async def resize_image(input_path: str, output_path: str, width: int = 200, height: int = 200):
+	with Image.open(input_path) as img:
 		img = img.resize((width,height))
-		img.save(output_file_path)
+		img.save(output_path)

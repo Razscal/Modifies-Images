@@ -13,26 +13,28 @@ router = APIRouter(
 
 @router.post("/upload")
 async def upload_file(background_task: BackgroundTasks, upload_file : UploadFile = File(...)):
-	path = f"files/{uuid.uuid4()}_0.png"
-	processed = f"processed_image/{uuid.uuid4()}_final.png"
+	img_id = uuid.uuid4()
+	step =0
+	path = f"files/{img_id}_{step}.png"
 
 	if not os.path.isdir("files"):
 		os.mkdir("files")
-	if not os.path.isdir("processed_image"):
-		os.mkdir("processed_image")
 
 	with open(path, "w+b") as buffer:
 		shutil.copyfileobj(upload_file.file, buffer)
+	print(f"Image {path} uploaded with ID {img_id}")
 
-	background_task.add_task(main_process, path, processed)
+	background_task.add_task(main_process, img_id, path, step)
+
 	return {
+		"id" : str(img_id),
 		"status": "success",
 		"message": "Image uploaded and is being processed"
 	}
 
 @router.get("/download")
 async def download_file(id):
-	return FileResponse(f"processed_image/{id}_final.png")
+	return FileResponse(f"files/{id}_final.png")
 
 @router.get("/download_step")
 async def download_step(id,step):
