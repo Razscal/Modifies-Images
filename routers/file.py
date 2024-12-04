@@ -28,6 +28,7 @@ async def upload_file(background_task: BackgroundTasks, upload_file : UploadFile
 
 	return {
 		"id" : str(img_id),
+		"source" : "http://localhost:8000/files/",
 		"status": "success",
 		"message": "Image uploaded and is being processed"
 	}

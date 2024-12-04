@@ -7,8 +7,14 @@ app = FastAPI()
 app.include_router(file.router)
 
 origins = ["http://localhost:63343"]
-app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"],
-                   allow_headers=["*"])
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins (or specify your front-end domain)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
 
