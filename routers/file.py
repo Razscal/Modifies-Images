@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from utils.image_process import main_process
 import shutil
 from fastapi.background import BackgroundTasks
+import zipfile
 
 router = APIRouter(
 	prefix="/file",
@@ -33,9 +34,41 @@ async def upload_file(background_task: BackgroundTasks, upload_file : UploadFile
 		"message": "Image uploaded and is being processed"
 	}
 
+
 @router.get("/download")
-async def download_file(id):
-	return FileResponse(f"files/{id}_final.png")
+async def download_file(id: str):
+	directory = 'files'
+
+	# List all files that start with 'id' in the 'files' directory
+	files_to_append = [f for f in os.listdir(directory) if
+	                   os.path.isfile(os.path.join(directory, f)) and f.startswith(id)]
+
+	# If no files match the pattern, return a message
+	if not files_to_append:
+		return {
+			"status": "failed",
+			"message": "No files found to zip"
+		}
+
+	try:
+		# Create or append to the zip file
+		zip_filename = f'files/{id}_final.zip'
+		mode = 'a' if os.path.exists(zip_filename) else 'w'
+
+		with zipfile.ZipFile(zip_filename, mode) as zipf:
+			for file in files_to_append:
+				file_path = os.path.join(directory, file)  # Get the full file path
+				zipf.write(file_path, arcname=file)  # Add file to the zip, store only the file name
+
+	except Exception as e:
+		print(e)
+		return {
+			"status": "failed",
+			"message": "Failed to create zip file"
+		}
+
+	# Return the zip file for download
+	return FileResponse(zip_filename)
 
 @router.get("/download_step")
 async def download_step(id,step):
