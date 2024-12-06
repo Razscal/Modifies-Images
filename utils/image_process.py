@@ -11,7 +11,7 @@ import os
 from basicsr.utils import imwrite
 
 
-async def main_process(img_id, origin_path, step):
+async def main_process(img_id, origin_path, step, positive, negative):
 	# Step 1 #SUPIR
 
 	# Step 2 #Desaturate
@@ -29,6 +29,10 @@ async def main_process(img_id, origin_path, step):
 	step += 1
 	output_path = f"files/{img_id}_{step}.png"
 	input_path =  briaa(input_path, output_path)
+
+	#Step 5 #ControlNet, positive, negative prompt
+
+	#Step 6 #Output
 
 
 def image_desaturate(image_path, output_path, factor=1.0, method="luminance"):

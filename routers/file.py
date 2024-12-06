@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 @router.post("/upload")
-async def upload_file(background_task: BackgroundTasks, upload_file : UploadFile = File(...)):
+async def upload_file(background_task: BackgroundTasks, positive: str, negative: str,upload_file : UploadFile = File(...)):
 	img_id = uuid.uuid4()
 	step =0
 	path = f"files/{img_id}_{step}.png"
@@ -25,7 +25,7 @@ async def upload_file(background_task: BackgroundTasks, upload_file : UploadFile
 		shutil.copyfileobj(upload_file.file, buffer)
 	print(f"Image {path} uploaded with ID {img_id}")
 
-	background_task.add_task(main_process, img_id, path, step)
+	background_task.add_task(main_process, img_id, path, step, positive, negative)
 
 	return {
 		"id" : str(img_id),
