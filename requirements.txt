@@ -6,3 +6,10 @@ sqlalchemy
 crypto
 pillow
 websockets
+opencv-python
+numpy
+basicsr
+facexlib
+realesrgan
+torch
+transformers
