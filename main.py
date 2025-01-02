@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI, WebSocket
 from routers import file
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,15 +18,3 @@ app.add_middleware(
 )
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
-
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    img_id = None
-    try:
-        while True:
-            data = await websocket.receive_text()
-            if data:
-                await websocket.send_text(f"WebSocket registered for image ID: {img_id}")
-    except Exception as e:
-        print(f"WebSocket error: {e}")
