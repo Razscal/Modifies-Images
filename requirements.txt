@@ -1,4 +1,4 @@
-fastapi
+fastapi~=0.115.6
 pydantic
 urllib3
 python-multipart
@@ -12,4 +12,7 @@ basicsr
 facexlib
 realesrgan
 torch
-transformers
+transformers~=4.47.1
+uvicorn~=0.34.0
+boto3~=1.35.90
+botocore~=1.35.90

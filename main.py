@@ -1,20 +1,20 @@
 import uvicorn
-from fastapi import FastAPI, WebSocket
-from routers import file
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI
+from routers import file_router
+from middleware.use_cors import use_cors
+from middleware.use_static import use_static
 
 app = FastAPI()
-app.include_router(file.router)
+app.include_router(file_router.router)
 
-origins = ["http://localhost:63343"]
 # Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins (or specify your front-end domain)
-    allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
-)
+use_static(app)
+use_cors(app)
 
-app.mount("/files", StaticFiles(directory="files"), name="files")
+@app.get("/")
+async def root():
+	return {"message": "Hello, World!"}
+
+
+if __name__ == "__main__":
+	uvicorn.run(app, host="0.0.0.0", port=8000)
